@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 
 const FundPage = () => {
   // Example data, replace with your actual data
@@ -24,8 +25,59 @@ const FundPage = () => {
     // Add more records as necessary
   ];
 
+  const spendMoneyDetails = [
+    {
+      date: '2024-08-10',
+      project: 'Emergency Relief',
+      amount: 10000,
+      account: 'Bank Transfer',
+      transactionId: 'TX98765432',
+    },
+    {
+      date: '2024-08-09',
+      project: 'Reconstruction',
+      amount: 15000,
+      account: 'Cash',
+      transactionId: 'TX12345679',
+    },
+    // Add more records as necessary
+  ];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+        <button 
+          onClick={openModal} 
+          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
+          Donate!
+        </button>
+      </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className=" rounded-lg relative max-w-lg mx-auto">
+            <button 
+              onClick={closeModal} 
+              className="absolute top-6 left-6 text-white bg-black">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            <img 
+              src="/flood__r.jpg" 
+              alt="Donate" 
+              className="w-full h-auto rounded-lg"/>
+          </div>
+        </div>
+      )}
+
+
       <h1 className="text-4xl font-bold text-center text-red-600 mb-8">Fund Overview</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -63,7 +115,7 @@ const FundPage = () => {
 
           {/* Added Money List */}
           <h3 className="text-2xl font-bold text-red-600 mb-4">Added Money List</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mb-8">
             <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
               <thead>
                 <tr className="bg-red-600 text-white">
@@ -79,6 +131,33 @@ const FundPage = () => {
                   <tr key={index} className="hover:bg-gray-100">
                     <td className="border-t px-4 py-3 text-gray-700">{record.date}</td>
                     <td className="border-t px-4 py-3 text-gray-700">{record.donor}</td>
+                    <td className="border-t px-4 py-3 text-gray-700">{record.amount.toLocaleString()}</td>
+                    <td className="border-t px-4 py-3 text-gray-700">{record.account}</td>
+                    <td className="border-t px-4 py-3 text-gray-700">{record.transactionId}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Spend Money List */}
+          <h3 className="text-2xl font-bold text-red-600 mb-4">Spent Money List</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
+              <thead>
+                <tr className="bg-red-600 text-white">
+                  <th className="px-4 py-3 text-left">Date</th>
+                  <th className="px-4 py-3 text-left">Project</th>
+                  <th className="px-4 py-3 text-left">Amount (BDT)</th>
+                  <th className="px-4 py-3 text-left">Account</th>
+                  <th className="px-4 py-3 text-left">Transaction ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {spendMoneyDetails.map((record, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border-t px-4 py-3 text-gray-700">{record.date}</td>
+                    <td className="border-t px-4 py-3 text-gray-700">{record.project}</td>
                     <td className="border-t px-4 py-3 text-gray-700">{record.amount.toLocaleString()}</td>
                     <td className="border-t px-4 py-3 text-gray-700">{record.account}</td>
                     <td className="border-t px-4 py-3 text-gray-700">{record.transactionId}</td>
