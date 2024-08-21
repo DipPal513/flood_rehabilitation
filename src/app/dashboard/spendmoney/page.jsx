@@ -1,0 +1,87 @@
+"use client";
+import React, { useState } from "react";
+
+const SpendMoneyForm = () => {
+  const [amount, setAmount] = useState("");
+  const [sector, setSector] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log({
+      amount,
+      sector,
+      description,
+      date
+    });
+    // Reset form fields
+    setAmount("");
+    setSector("");
+    setDescription("");
+    setDate("");
+  };
+
+  return (
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold text-red-600 mb-6">Spend Money</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="amount" className="block text-gray-700 font-medium mb-1">Amount (BDT)</label>
+          <input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <label htmlFor="sector" className="block text-gray-700 font-medium mb-1">Sector</label>
+          <input
+            type="text"
+            id="sector"
+            value={sector}
+            onChange={(e) => setSector(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <label htmlFor="description" className="block text-gray-700 font-medium mb-1">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            rows="4"
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <label htmlFor="date" className="block text-gray-700 font-medium mb-1">Date</label>
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+        <div>
+          <button
+            type="submit"
+            className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default SpendMoneyForm;

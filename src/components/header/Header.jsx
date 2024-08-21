@@ -21,14 +21,17 @@ const Header = () => {
 
         {/* Navigation for larger screens */}
         <nav className="hidden md:flex space-x-6">
+          <Link href="/dashboard">
+            <p className="hover:text-red-300 cursor-pointer">admin?</p>
+          </Link>
           <Link href="/">
             <p className="hover:text-red-300 cursor-pointer">Home</p>
           </Link>
           <Link href="/about">
             <p className="hover:text-red-300 cursor-pointer">About</p>
           </Link>
-          <Link href="/projects">
-            <p className="hover:text-red-300 cursor-pointer">Projects</p>
+          <Link href="/daily">
+            <p className="hover:text-red-300 cursor-pointer">Daily</p>
           </Link>
           <Link href="/contact">
             <p className="hover:text-red-300 cursor-pointer">Contact</p>
@@ -62,6 +65,9 @@ const Header = () => {
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
         <nav className="md:hidden bg-red-600 px-4 py-3 space-y-2">
+          <Link href="/dashboard">
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">admin?</p>
+          </Link>
           <Link href="/">
             <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">Home</p>
           </Link>
