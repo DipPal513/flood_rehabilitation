@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const SpendMoneyForm = () => {
   const [amount, setAmount] = useState("");
@@ -7,15 +9,36 @@ const SpendMoneyForm = () => {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
+
+    const token = Cookies.get('token'); // Get the token from cookies
+    const apiKey = 'your-x-api-key'; // Replace with your actual API key
+
+    const data = {
       amount,
       sector,
       description,
-      date
-    });
+      date,
+    };
+
+    try {
+      const response = await axios.post('https://your-api-endpoint.com/spend-money', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+        },
+        withCredentials: true, // Ensure cookies are sent with the request
+      });
+
+      console.log(response.data);
+      // Handle success (e.g., show a success message, clear form)
+    } catch (error) {
+      console.error('Error spending money:', error);
+      // Handle error (e.g., show an error message)
+    }
+
     // Reset form fields
     setAmount("");
     setSector("");
@@ -28,7 +51,9 @@ const SpendMoneyForm = () => {
       <h2 className="text-2xl font-bold text-red-600 mb-6">Spend Money</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="amount" className="block text-gray-700 font-medium mb-1">Amount (BDT)</label>
+          <label htmlFor="amount" className="block text-gray-700 font-medium mb-1">
+            Amount (BDT)
+          </label>
           <input
             type="number"
             id="amount"
@@ -39,7 +64,9 @@ const SpendMoneyForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="sector" className="block text-gray-700 font-medium mb-1">Sector</label>
+          <label htmlFor="sector" className="block text-gray-700 font-medium mb-1">
+            Sector
+          </label>
           <input
             type="text"
             id="sector"
@@ -50,7 +77,9 @@ const SpendMoneyForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="description" className="block text-gray-700 font-medium mb-1">Description</label>
+          <label htmlFor="description" className="block text-gray-700 font-medium mb-1">
+            Description
+          </label>
           <textarea
             id="description"
             value={description}
@@ -61,7 +90,9 @@ const SpendMoneyForm = () => {
           />
         </div>
         <div>
-          <label htmlFor="date" className="block text-gray-700 font-medium mb-1">Date</label>
+          <label htmlFor="date" className="block text-gray-700 font-medium mb-1">
+            Date
+          </label>
           <input
             type="date"
             id="date"

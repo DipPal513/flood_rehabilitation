@@ -32,31 +32,31 @@ const Sidebar = () => {
           </div>
           <ul className="mt-6 space-y-2">
             <li>
-              <Link href={"addmoney"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+              <Link href={"/dashboard/addmoney"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiPlusCircle className="w-5 h-5" />
                 <span>Add Money</span>
               </Link>
             </li>
             <li>
-              <Link href="spendmoney" className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+              <Link href="/dashboard/spendmoney" className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiDollarSign className="w-5 h-5" />
                 <span>Spend Money</span>
               </Link>
             </li>
             <li>
-              <Link href={'users'} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+              <Link href={'/dashboard/users'} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiUser className="w-5 h-5" />
                 <span>User Management</span>
               </Link>
             </li>
             <li>
-              <Link href={"reports"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+              <Link href={"/dashboard/reports"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiPieChart className="w-5 h-5" />
                 <span>Reports</span>
               </Link>
             </li>
             <li>
-              <Link href={"settings"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+              <Link href={"/dashboard/settings"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiSettings className="w-5 h-5" />
                 <span>Settings</span>
               </Link>
