@@ -1,12 +1,18 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -20,7 +26,32 @@ const Header = () => {
         </div>
 
         {/* Navigation for larger screens */}
-        <nav className="hidden md:flex space-x-6">
+        <nav className="hidden md:flex space-x-6 items-center">
+            {/* User Avatar */}
+            <div className="relative">
+            <button onClick={toggleDropdown} className="focus:outline-none">
+              <Image
+                src="/path-to-avatar.jpg" // Replace with your avatar image path
+                alt="User Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                <Link href="/profile">
+                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Profile</p>
+                </Link>
+                <Link href="/dashboard">
+                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Dashboard</p>
+                </Link>
+                <Link href="/logout">
+                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Logout</p>
+                </Link>
+              </div>
+            )}
+          </div>
           <Link href="/dashboard">
             <p className="hover:text-red-300 cursor-pointer">admin?</p>
           </Link>
@@ -30,12 +61,14 @@ const Header = () => {
           <Link href="/about">
             <p className="hover:text-red-300 cursor-pointer">About</p>
           </Link>
-          <Link href="/daily">
-            <p className="hover:text-red-300 cursor-pointer">Daily</p>
+          <Link href="/projects">
+            <p className="hover:text-red-300 cursor-pointer">Projects</p>
           </Link>
           <Link href="/contact">
             <p className="hover:text-red-300 cursor-pointer">Contact</p>
           </Link>
+
+        
         </nav>
 
         {/* Mobile Menu Button */}

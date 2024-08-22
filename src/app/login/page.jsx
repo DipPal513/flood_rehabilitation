@@ -1,30 +1,43 @@
 "use client";
-import React, { useState } from 'react';
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import base_url from '@/utils/base_url';
+import React, { useState } from "react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import base_url from "@/utils/base_url";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const apiKey = "[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5";
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    toast.loading('Logging in...');
-
+    toast.loading("Logging in...");
+    console.log("login enter...");
     try {
-      const response = await axios.post(base_url+'/auth/login', { email, password },{headers:{"x-api-key":"[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5"}});
-      
+      const response = await axios.post(
+        base_url + "/auth/login",
+        { email, password },
+        
+          {headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+          
+        }}
+      );
+      console.log("response", response);
+
       if (response.status === 200) {
         toast.dismiss(); // Dismiss the loading toast
-        toast.success('Login successful!');
+        toast.success("Login successful!");
         // Redirect or handle successful login
       }
     } catch (error) {
       toast.dismiss(); // Dismiss the loading toast
-      toast.error('Login failed. Please check your credentials.');
+      console.log(error, "show error");
+      toast.error(
+        error.message || "Login failed. Please check your credentials."
+      );
     } finally {
       setLoading(false);
     }
@@ -36,7 +49,10 @@ const LoginPage = () => {
         <h2 className="text-2xl font-bold text-center text-red-600">Login</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -50,7 +66,10 @@ const LoginPage = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -67,7 +86,9 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${loading && 'opacity-75'}`}
+              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
+                loading && "opacity-75"
+              }`}
             >
               {loading ? (
                 <svg
@@ -91,13 +112,13 @@ const LoginPage = () => {
                   ></path>
                 </svg>
               ) : (
-                'Login'
+                "Login"
               )}
             </button>
           </div>
         </form>
         <p className="text-sm text-center text-gray-600">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <a href="/register" className="text-red-600 hover:underline">
             Register here
           </a>

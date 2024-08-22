@@ -10,7 +10,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const apiKey = "[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5";
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -27,10 +27,10 @@ const RegisterPage = () => {
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5",
+            Authorization: `Bearer ${apiKey}`,
+            "x-api-key": apiKey,
           },
-          withCredentials: true, // Include credentials such as cookies
+          // Include credentials such as cookies
         }
       );
       console.log("this is response: ", response);

@@ -17,7 +17,7 @@ const AddMoneyForm = () => {
     const apiKey = 'your-x-api-key'; // Replace with your actual API key
 
     const data = {
-      donor: 'Salim', // Replace with dynamic donor if needed
+      donor: donor, // Replace with dynamic donor if needed
       amount: addAmount,
       account: addSource,
       trx: transactionId,
@@ -29,8 +29,7 @@ const AddMoneyForm = () => {
       const response = await axios.post(base_url + '/fund-received', data, {
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+            'x-api-key': "[gJzLw!\'^!KW3X8v.5c4WYvjPxVliea5"
         },
         withCredentials: true, // Ensure cookies are sent with the request
       });
