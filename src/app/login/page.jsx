@@ -22,7 +22,7 @@ const LoginPage = () => {
           headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey,
-            "Authorization":`Bearer ${apiKey}`
+            // "Authorization":`Bearer ${apiKey}`
           },
           withCredentials:true
         }
