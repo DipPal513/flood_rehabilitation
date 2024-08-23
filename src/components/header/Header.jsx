@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const token = Cookies.get("accessToken");
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -22,6 +24,7 @@ const Header = () => {
     Cookies.remove("user"); // Clear the access token cookie
     toast.success("Logged out successfully!"); // Show success toast
     setIsDropdownOpen(false); // Close the dropdown menu after logout
+    router.push("/login")
   };
 
 
