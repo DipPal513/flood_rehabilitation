@@ -31,7 +31,9 @@ const ProfilePage = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-
+  if(!userData) {
+    return <p>you are not logged in!</p>
+  }
   return (
     <div className="max-w-screen-lg mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
