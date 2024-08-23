@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import base_url from "@/utils/base_url";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const apiKey = "[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5";
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -17,19 +18,19 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         "https://aefff-api.vercel.app/api/auth/login",
-        { email:email, password:password },
+        { email, password },
         {
           headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey,
-            // "Authorization":`Bearer ${apiKey}`
           },
-          withCredentials:true
         }
       );
       console.log("x-api-key", apiKey);
 
       if (response.status === 200) {
+        const accessToken = response.data.accessToken; // Assuming the access token is in the response
+        Cookies.set("accessToken", accessToken, { expires: 7 }); // Set cookie with access token, expires in 7 days
         toast.dismiss(); // Dismiss the loading toast
         toast.success("Login successful!");
         // Redirect or handle successful login

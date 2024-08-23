@@ -12,7 +12,7 @@ const SpendMoneyForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = Cookies.get('token'); // Get the token from cookies
+    const token = Cookies.get('accessToken'); // Get the token from cookies
     const apiKey = 'your-x-api-key'; // Replace with your actual API key
 
     const data = {

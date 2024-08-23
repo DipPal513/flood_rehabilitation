@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import base_url from '@/utils/base_url';
+import apiKey from '@/utils/api_key';
 
 const AddMoneyForm = () => {
   const [addAmount, setAddAmount] = useState('');
@@ -13,8 +14,9 @@ const AddMoneyForm = () => {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
 
-    const token = Cookies.get('token'); // Get the token from cookies
-    const apiKey = 'your-x-api-key'; // Replace with your actual API key
+    const token = Cookies.get('accessToken'); // Get the token from cookies
+  // Replace with your actual API key
+    
 
     const data = {
       donor: donor, // Replace with dynamic donor if needed
@@ -29,9 +31,10 @@ const AddMoneyForm = () => {
       const response = await axios.post(base_url + '/fund-received', data, {
         headers: {
           'Content-Type': 'application/json',
-            'x-api-key': "[gJzLw!\'^!KW3X8v.5c4WYvjPxVliea5"
+            'x-api-key': apiKey,
+            "Authorization":`Bearer ${token}`
         },
-        withCredentials: true, // Ensure cookies are sent with the request
+        // withCredentials: true, // Ensure cookies are sent with the request
       });
 
       console.log(response.data);
