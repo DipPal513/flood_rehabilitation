@@ -4,8 +4,6 @@ import { format } from "date-fns";
 import useFetch from "@/hooks/useFetch"; // Import your custom useFetch hook
 
 const FundPage = () => {
-  // Example data, replace with your actual data
-
   // Fetch added money details
   const {
     data: addedMoneyDetails,
@@ -19,12 +17,11 @@ const FundPage = () => {
     loading: spendLoading,
     error: spendError,
   } = useFetch("/fund-sent");
-  console.log("spendmone ", spendMoneyDetails);
-  console.log("spendmone ", addedMoneyDetails);
 
+  // Calculate current money by converting string amounts to numbers and then performing arithmetic
   const currentMoney =
-    Number(addedMoneyDetails?.reduce((sum, record) => sum + record.amount, 0)) -
-    Number(spendMoneyDetails?.reduce((sum, record) => sum + record.amount, 0));
+    (addedMoneyDetails?.reduce((sum, record) => sum + Number(record.amount), 0) || 0) -
+    (spendMoneyDetails?.reduce((sum, record) => sum + Number(record.amount), 0) || 0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -109,7 +106,7 @@ const FundPage = () => {
             {spendLoading
               ? "Loading..."
               : spendMoneyDetails
-                  ?.reduce((sum, record) => sum + record.amount, 0)
+                  ?.reduce((sum, record) => sum + Number(record.amount), 0)
                   .toLocaleString()}{" "}
             BDT
           </p>
@@ -123,7 +120,7 @@ const FundPage = () => {
             {addedLoading
               ? "Loading..."
               : addedMoneyDetails
-                  ?.reduce((sum, record) => sum + record.amount, 0)
+                  ?.reduce((sum, record) => sum + Number(record.amount), 0)
                   .toLocaleString()}{" "}
             BDT
           </p>
@@ -168,13 +165,13 @@ const FundPage = () => {
                   {addedMoneyDetails.map((record, index) => (
                     <tr key={index} className="hover:bg-gray-100">
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {format(new Date(record.date), "yyyy-MM-dd")}
+                        {record.date}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         {record.donor}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.amount.toLocaleString()}
+                        {Number(record.amount).toLocaleString()}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         {record.account}
@@ -219,7 +216,7 @@ const FundPage = () => {
                         {record.project}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.amount.toLocaleString()}
+                        {Number(record.amount).toLocaleString()}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         {record.account}

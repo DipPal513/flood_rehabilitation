@@ -43,13 +43,12 @@ const AddMoneyForm = () => {
 
       console.log(response.data);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         toast.success('Money added successfully!');
         setAddAmount('');
         setTime('');
         setAccount('');
         setTrx('');
-      
         setDonor('');
       } else {
         toast.error('Failed to add money. Please try again.');
