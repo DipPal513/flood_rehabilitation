@@ -4,8 +4,6 @@ import useFetch from "@/hooks/useFetch"; // Import your custom useFetch hook
 
 const FundPage = () => {
   // Example data, replace with your actual data
-  const currentMoney = 150000;
-  const spendMoney = 50000;
 
   // Fetch added money details
   const {
@@ -20,8 +18,13 @@ const FundPage = () => {
     loading: spendLoading,
     error: spendError,
   } = useFetch("/fund-sent");
-  console.log("spendmone ",spendMoneyDetails)
-  console.log("spendmone ",addedMoneyDetails)
+  console.log("spendmone ", spendMoneyDetails);
+  console.log("spendmone ", addedMoneyDetails);
+
+  const currentMoney =
+    Number(addedMoneyDetails?.reduce((sum, record) => sum + record.amount, 0)) -
+   Number(spendMoneyDetails?.reduce((sum, record) => sum + record.amount, 0));
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
