@@ -4,27 +4,29 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import apiKey from "@/utils/api_key";
 import base_url from "@/utils/base_url";
+import { toast } from "react-hot-toast";
 
 const SpendMoneyForm = () => {
   const [amount, setAmount] = useState("");
   const [sector, setSector] = useState("");
   const [trx, setTrx] = useState("");
   const [account, setAccount] = useState("");
-  // const [description, setDescription] = useState("");
   const [time, setTime] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const token = Cookies.get("accessToken"); // Get the token from  // Get the token from cookies
-    // Replace with your actual API key
-    const user = JSON.parse(Cookies.get('user'));
+    const token = Cookies.get("accessToken"); 
+    const user = JSON.parse(Cookies.get("user"));
+    
     const data = {
       amount,
       project: sector,
       account: account,
       trx,
-      timeSent:new Date(time).toISOString(),
+      timeSent: new Date(time).toISOString(),
       addedBy: user._id,
     };
 
@@ -33,23 +35,26 @@ const SpendMoneyForm = () => {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
-          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          Authorization: `Bearer ${token}`,
         },
-        withCredentials: true, // Ensure cookies are sent with the request
+        withCredentials: true,
       });
 
-      console.log(response.data);
-      // Handle success (e.g., show a success message, clear form)
+      if (response.status === 201) {
+        toast.success("Money spent successfully!");
+        // Reset form fields
+        setAmount("");
+        setSector("");
+        setTrx("");
+        setAccount("");
+        setTime("");
+      }
     } catch (error) {
       console.error("Error spending money:", error);
-      // Handle error (e.g., show an error message)
+      toast.error("Failed to spend money. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    // Reset form fields
-    setAmount("");
-    setSector("");
-    // setDescription("");
-    setTime("");
   };
 
   return (
@@ -57,10 +62,7 @@ const SpendMoneyForm = () => {
       <h2 className="text-2xl font-bold text-red-600 mb-6">Spend Money</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label
-            htmlFor="amount"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label htmlFor="amount" className="block text-gray-700 font-medium mb-1">
             Amount (BDT)
           </label>
           <input
@@ -70,13 +72,11 @@ const SpendMoneyForm = () => {
             onChange={(e) => setAmount(e.target.value)}
             required
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={loading}
           />
         </div>
         <div>
-          <label
-            htmlFor="sector"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label htmlFor="sector" className="block text-gray-700 font-medium mb-1">
             Sector
           </label>
           <input
@@ -86,13 +86,11 @@ const SpendMoneyForm = () => {
             onChange={(e) => setSector(e.target.value)}
             required
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={loading}
           />
         </div>
         <div>
-          <label
-            htmlFor="trx"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label htmlFor="trx" className="block text-gray-700 font-medium mb-1">
             Transaction Id
           </label>
           <input
@@ -102,26 +100,11 @@ const SpendMoneyForm = () => {
             onChange={(e) => setTrx(e.target.value)}
             required
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={loading}
           />
         </div>
-        {/* <div>
-          <label htmlFor="description" className="block text-gray-700 font-medium mb-1">
-            Description
-          </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            rows="4"
-            className="w-full border border-gray-300 rounded-md p-2"
-          />
-        </div> */}
         <div>
-          <label
-            htmlFor="account"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label htmlFor="account" className="block text-gray-700 font-medium mb-1">
             Account
           </label>
           <input
@@ -131,13 +114,11 @@ const SpendMoneyForm = () => {
             required
             type="text"
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={loading}
           />
         </div>
         <div>
-          <label
-            htmlFor="date"
-            className="block text-gray-700 font-medium mb-1"
-          >
+          <label htmlFor="date" className="block text-gray-700 font-medium mb-1">
             Date
           </label>
           <input
@@ -147,14 +128,16 @@ const SpendMoneyForm = () => {
             onChange={(e) => setTime(e.target.value)}
             required
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={loading}
           />
         </div>
         <div>
           <button
             type="submit"
             className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition"
+            disabled={loading}
           >
-            Submit
+            {loading ? "Processing..." : "Submit"}
           </button>
         </div>
       </form>

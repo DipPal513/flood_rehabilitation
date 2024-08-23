@@ -22,7 +22,7 @@ const Sidebar = () => {
     <div className="flex h-full">
       {/* Sidebar */}
       <aside
-        className={`bg-red-600 md:relative fixed text-white h-screen transition-transform transform ${
+        className={`bg-red-600 md:relative fixed  text-white h-full  transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }   w-64 z-40 md:translate-x-0`}
       >

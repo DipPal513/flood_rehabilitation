@@ -9,29 +9,30 @@ const useFetch = (endpoint) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = Cookies.get("accessToken");
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(base_url + endpoint, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': apiKey,
-                        "Authorization": `Bearer ${token}`
-                    },
-                });
-                setData(response.data.data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
 
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(base_url + endpoint, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+            setData(response.data.data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, [endpoint]);
 
-    return { data, loading, error };
+    return { data, loading, error, fetchData };
 };
 
 export default useFetch;

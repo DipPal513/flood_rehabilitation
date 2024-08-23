@@ -1,7 +1,11 @@
 "use client";
 import useFetch from "@/hooks/useFetch";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
+import Cookies from "js-cookie";
+import apiKey from "@/utils/api_key";
+import toast from "react-hot-toast";
 
 // Skeleton Loader Component
 const SkeletonLoader = () => (
@@ -13,7 +17,7 @@ const SkeletonLoader = () => (
 );
 
 const UserPage = () => {
-  const { data, error, loading } = useFetch('/users');
+  const { data, error, loading,fetchData } = useFetch("/users");
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -22,14 +26,39 @@ const UserPage = () => {
     }
   }, [data]);
 
-  const handleRoleChange = (userId, newRole) => {
-    setUsers(users.map(user =>
-      user.id === userId ? { ...user, role: newRole } : user
-    ));
+  const handleRoleChange = async (userId, newRole) => {
+    const user = Cookies.get("user") ?JSON.parse(Cookies.get("user")) : null; 
+    const token = Cookies.get("accessToken")// Get the token from cookies
+    // Replace with your actual API key
+
+    try {
+      const response = await axios.patch(
+        `https://aefff-api.vercel.app/api/users/${userId}`,
+        { role: newRole, updatedBy: userId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
+
+      if (response.status == 200) {
+        fetchData();
+        
+        toast("Role updated successfully...");
+        console.log("Role updated successfully:", response.data);
+      }
+    } catch (error) {
+      console.error("Failed to update role:", error);
+      toast.error("Failed to update role")
+      // Handle error (e.g., show an error message)
+    }
   };
 
   const handleDeleteUser = (userId) => {
-    setUsers(users.filter(user => user.id !== userId));
+    setUsers(users.filter((user) => user._id !== userId));
   };
 
   return (
@@ -51,27 +80,31 @@ const UserPage = () => {
                 <th className="py-2 px-4 border-b">Name</th>
                 <th className="py-2 px-4 border-b">Email</th>
                 <th className="py-2 px-4 border-b">Role</th>
+                <th className="py-2 px-4 border-b">Type</th>
                 <th className="py-2 px-4 border-b">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user.id} className="border-b">
-                  <td className="py-2 px-4">{user.name}</td>
+                  <td className="py-2 px-4">{user.firstName}</td>
                   <td className="py-2 px-4">{user.email}</td>
                   <td className="py-2 px-4">
                     <select
                       value={user.role}
-                      onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                      onChange={(e) =>
+                        handleRoleChange(user._id, e.target.value)
+                      }
                       className="border border-gray-300 rounded-md p-1 w-full md:w-auto"
                     >
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
+                      <option value="GUEST">Guest</option>
+                      <option value="ADMIN">Admin</option>
                     </select>
                   </td>
+                      <td className="py-2 px-4">{user.role}</td>
                   <td className="py-2 px-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                     <button
-                      onClick={() => handleDeleteUser(user.id)}
+                      onClick={() => handleDeleteUser(user._id)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <FiTrash2 className="w-5 h-5" />
@@ -88,7 +121,9 @@ const UserPage = () => {
             </tbody>
           </table>
         )}
-        {error && <div className="text-red-500 mt-4">Failed to load users.</div>}
+        {error && (
+          <div className="text-red-500 mt-4">Failed to load users.</div>
+        )}
       </div>
     </div>
   );
