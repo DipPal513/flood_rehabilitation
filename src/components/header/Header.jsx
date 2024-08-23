@@ -75,7 +75,7 @@ const Header = () => {
             </>
           ) : (
             <Link href="/login">
-              <p className="hover:text-red-300 cursor-pointer">admin?</p>
+              <p className="hover:text-red-300 cursor-pointer">Login</p>
             </Link>
           )}
           <Link href="/">
