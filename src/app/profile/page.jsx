@@ -41,7 +41,7 @@ const ProfilePage = () => {
           {/* Avatar */}
           <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
             <Image
-              src={userData.avatar || '/default-avatar.jpg'} // Fallback to default if no avatar
+              src={'/default-avatar.jpg'} // Fallback to default if no avatar
               alt="User Avatar"
               width={100}
               height={100}
