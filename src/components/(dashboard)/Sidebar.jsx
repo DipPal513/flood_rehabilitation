@@ -22,7 +22,7 @@ const Sidebar = () => {
     <div className="flex h-full">
       {/* Sidebar */}
       <aside
-        className={`bg-red-600 md:relative fixed  text-white h-full  transition-transform transform ${
+        className={`bg-red-600 md:relative fixed  text-white h-screen  transition-transform transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }   w-64 z-40 md:translate-x-0`}
       >
@@ -47,6 +47,12 @@ const Sidebar = () => {
               <Link href={'/dashboard/users'} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
                 <FiUser className="w-5 h-5" />
                 <span>User Management</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={"/dashboard/fundmanage"} className="w-full flex items-center space-x-2 py-2 px-4 rounded-md hover:bg-red-700 transition">
+                <FiPieChart className="w-5 h-5" />
+                <span>Manage funds</span>
               </Link>
             </li>
             <li>
