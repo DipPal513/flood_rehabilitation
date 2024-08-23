@@ -1,19 +1,20 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import ContentLoader from 'react-content-loader';
+import Cookies from 'js-cookie';
 
 const ProfilePage = () => {
-  // Example user data, replace with actual data from your backend
-  const userData = {
-    avatar: '/path-to-avatar.jpg', // Replace with the actual avatar path
-    name: 'Dip Pal',
-    email: 'dip@example.com',
-  };
+ 
+  
+  const [error, setError] = useState(null);
 
   // State for password reset form
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+ const userData = JSON.parse(Cookies.get("user"));
 
   const handlePasswordReset = (e) => {
     e.preventDefault();
@@ -25,6 +26,12 @@ const ProfilePage = () => {
     });
   };
 
+  
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div className="max-w-screen-lg mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
@@ -34,7 +41,7 @@ const ProfilePage = () => {
           {/* Avatar */}
           <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
             <Image
-              src={userData.avatar}
+              src={userData.avatar || '/default-avatar.jpg'} // Fallback to default if no avatar
               alt="User Avatar"
               width={100}
               height={100}
@@ -44,8 +51,9 @@ const ProfilePage = () => {
 
           {/* User Info */}
           <div className="text-center md:text-left">
-            <h2 className="text-2xl font-bold mb-2">{userData.name}</h2>
+            <h2 className="text-2xl font-bold mb-2">{`${userData.firstName} ${userData.lastName}`}</h2>
             <p className="text-gray-700">{userData.email}</p>
+            <p>Role: {userData.role}</p>
           </div>
         </div>
       </div>

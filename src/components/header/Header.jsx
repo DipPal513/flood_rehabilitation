@@ -1,8 +1,9 @@
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import Cookies from 'js-cookie';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const token = Cookies.get("accessToken");
@@ -16,47 +17,64 @@ const Header = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+  const handleLogout = () => {
+    Cookies.remove("accessToken"); // Clear the access token cookie
+    Cookies.remove("user"); // Clear the access token cookie
+    toast.success("Logged out successfully!"); // Show success toast
+    setIsDropdownOpen(false); // Close the dropdown menu after logout
+  };
+
 
   return (
     <header className="bg-red-600 text-white sticky top-0 z-50 shadow-lg">
       <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4 py-3">
         {/* Logo */}
         <div className="text-2xl font-bold">
-          <Link href="/">
-            August Flood Rehabilitation
-          </Link>
+          <Link href="/">August Flood Rehabilitation</Link>
         </div>
 
         {/* Navigation for larger screens */}
         <nav className="hidden md:flex space-x-6 items-center">
-            {/* User Avatar */}
-         {  token ?<> <div className="relative">
-            <button onClick={toggleDropdown} className="focus:outline-none">
-              <Image
-                src="/path-to-avatar.jpg" // Replace with your avatar image path
-                alt="User Avatar"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-                <Link href="/profile">
-                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Profile</p>
-                </Link>
-                <Link href="/dashboard">
-                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Dashboard</p>
-                </Link>
-                <Link href="/logout">
-                  <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">Logout</p>
-                </Link>
+          {/* User Avatar */}
+          {token ? (
+            <>
+              {" "}
+              <div className="relative">
+                <button onClick={toggleDropdown} className="focus:outline-none">
+                  <Image
+                    src="/path-to-avatar.jpg" // Replace with your avatar image path
+                    alt="User Avatar"
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/profile">
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Profile
+                      </p>
+                    </Link>
+                    <Link href="/dashboard">
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Dashboard
+                      </p>
+                    </Link>
+                    <p onClick={handleLogout}>
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Logout
+                      </p>
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div></>
-         : <Link href="/login">
-            <p className="hover:text-red-300 cursor-pointer">admin?</p>
-          </Link>}
+            </>
+          ) : (
+            <Link href="/login">
+              <p className="hover:text-red-300 cursor-pointer">admin?</p>
+            </Link>
+          )}
           <Link href="/">
             <p className="hover:text-red-300 cursor-pointer">Home</p>
           </Link>
@@ -69,8 +87,6 @@ const Header = () => {
           <Link href="/contact">
             <p className="hover:text-red-300 cursor-pointer">Contact</p>
           </Link>
-
-        
         </nav>
 
         {/* Mobile Menu Button */}
@@ -101,19 +117,29 @@ const Header = () => {
       {isMenuOpen && (
         <nav className="md:hidden bg-red-600 px-4 py-3 space-y-2">
           <Link href="/dashboard">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">admin?</p>
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              admin?
+            </p>
           </Link>
           <Link href="/">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">Home</p>
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              Home
+            </p>
           </Link>
           <Link href="/about">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">About</p>
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              About
+            </p>
           </Link>
           <Link href="/projects">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">Projects</p>
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              Projects
+            </p>
           </Link>
           <Link href="/contact">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">Contact</p>
+            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              Contact
+            </p>
           </Link>
         </nav>
       )}

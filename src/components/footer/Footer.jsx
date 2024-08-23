@@ -9,8 +9,8 @@ const Footer = () => {
           {/* Contact Info */}
           <div className="mb-4 md:mb-0">
             <h2 className="text-xl font-bold">Contact Us</h2>
-            <p className="mt-2">Phone: <a href="tel:+880123456789" className="hover:text-red-300">+880 123 456 789</a></p>
-            <p className="mt-1">Email: <Link href="mailto:info@floodrehabilitation.org" className="hover:text-red-300">info@floodrehabilitation.org</Link></p>
+            <p className="mt-2">Phone: <a href="tel:01625197575" className="hover:text-red-300">01625197575</a></p>
+            <p className="mt-1">Email: <Link href="mailto:dip.pal.513@gmail.com" className="hover:text-red-300">dip.pal.513@gmail.com</Link></p>
           </div>
 
           {/* Social Media Links */}

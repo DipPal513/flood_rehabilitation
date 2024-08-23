@@ -3,18 +3,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const apiKey = "[gJzLw!'^!KW3X8v.5c4WYvjPxVliea5";
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     toast.loading("Logging in...");
-    console.log("login enter...");
+
     try {
       const response = await axios.post(
         "https://aefff-api.vercel.app/api/auth/login",
@@ -26,20 +28,30 @@ const LoginPage = () => {
           },
         }
       );
-      console.log("x-api-key", apiKey);
 
-      if (response.status === 200) {
-        const accessToken = response.data.accessToken; // Assuming the access token is in the response
+      console.log( response?.data?.data?.user)
+      const user = response?.data?.data?.user;
+      if (response.status === 200 && response?.data?.data.accessToken) {
+        const accessToken = response?.data?.data.accessToken; // Access the token from the response
+
         Cookies.set("accessToken", accessToken, { expires: 7 }); // Set cookie with access token, expires in 7 days
+        Cookies.set("user",JSON.stringify(user) , { expires: 7 }); // Set cookie with access token, expires in 7 days
+
         toast.dismiss(); // Dismiss the loading toast
         toast.success("Login successful!");
-        // Redirect or handle successful login
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 100);
+      } else {
+        toast.dismiss(); // Dismiss the loading toast
+        toast.error(response.data.message || "Login failed. Please try again.");
       }
     } catch (error) {
       toast.dismiss(); // Dismiss the loading toast
-      console.log(error, "show error");
+      console.error("Login error:", error);
       toast.error(
-        error.message || "Login failed. Please check your credentials."
+        error.response?.data?.message || "Login failed. Please check your credentials."
       );
     } finally {
       setLoading(false);

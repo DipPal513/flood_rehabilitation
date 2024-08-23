@@ -18,7 +18,7 @@ const useFetch = (endpoint) => {
                       'x-api-key': apiKey,
                       "Authorization":`Bearer ${token}`
                   }, });
-                setData(response.data);
+                setData(response.data.data);
             } catch (err) {
                 setError(err);
             } finally {

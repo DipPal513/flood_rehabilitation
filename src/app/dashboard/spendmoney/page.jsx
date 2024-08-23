@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import apiKey from "@/utils/api_key";
+import base_url from "@/utils/base_url";
 
 const SpendMoneyForm = () => {
   const [amount, setAmount] = useState("");
@@ -13,7 +15,7 @@ const SpendMoneyForm = () => {
     e.preventDefault();
 
     const token = Cookies.get('accessToken'); // Get the token from cookies
-    const apiKey = 'your-x-api-key'; // Replace with your actual API key
+     // Replace with your actual API key
 
     const data = {
       amount,
@@ -23,7 +25,7 @@ const SpendMoneyForm = () => {
     };
 
     try {
-      const response = await axios.post('https://your-api-endpoint.com/spend-money', data, {
+      const response = await axios.post(base_url+'/fund-sent', data, {
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
