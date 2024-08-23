@@ -17,15 +17,16 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         base_url + "/auth/login",
-        { email, password },
-        
-          {headers: {
+        { email:email, password:password },
+
+        {
+          headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey,
-          
-        }}
+          },
+        }
       );
-      console.log("response", response);
+      console.log("x-api-key", apiKey);
 
       if (response.status === 200) {
         toast.dismiss(); // Dismiss the loading toast
