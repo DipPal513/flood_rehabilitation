@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import base_url from "@/utils/base_url";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
+  const router = useRouter()
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,6 +40,10 @@ const RegisterPage = () => {
       if (response.status === 201) {
         toast.dismiss(); // Dismiss the loading toast
         toast.success("Registration successful!");
+        setTimeout(() => {
+          router.push("/login")
+          
+        }, 100);
         // Redirect or handle successful registration
       }
     } catch (error) {

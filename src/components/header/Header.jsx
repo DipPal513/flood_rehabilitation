@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Cookies from 'js-cookie';
 
 const Header = () => {
+  const token = Cookies.get("accessToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -28,7 +30,7 @@ const Header = () => {
         {/* Navigation for larger screens */}
         <nav className="hidden md:flex space-x-6 items-center">
             {/* User Avatar */}
-            <div className="relative">
+         {  token ?<> <div className="relative">
             <button onClick={toggleDropdown} className="focus:outline-none">
               <Image
                 src="/path-to-avatar.jpg" // Replace with your avatar image path
@@ -51,10 +53,10 @@ const Header = () => {
                 </Link>
               </div>
             )}
-          </div>
-          <Link href="/dashboard">
+          </div></>
+         : <Link href="/login">
             <p className="hover:text-red-300 cursor-pointer">admin?</p>
-          </Link>
+          </Link>}
           <Link href="/">
             <p className="hover:text-red-300 cursor-pointer">Home</p>
           </Link>
