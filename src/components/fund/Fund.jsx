@@ -23,7 +23,7 @@ const FundPage = () => {
 
   const currentMoney =
     Number(addedMoneyDetails?.reduce((sum, record) => sum + record.amount, 0)) -
-   Number(spendMoneyDetails?.reduce((sum, record) => sum + record.amount, 0));
+    Number(spendMoneyDetails?.reduce((sum, record) => sum + record.amount, 0));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -167,7 +167,7 @@ const FundPage = () => {
                   {addedMoneyDetails.map((record, index) => (
                     <tr key={index} className="hover:bg-gray-100">
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.date}
+                        {format(new Date(record.date), "yyyy-MM-dd")}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         {record.donor}

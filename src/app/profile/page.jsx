@@ -14,8 +14,8 @@ const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
- const userData = JSON.parse(Cookies.get("user"));
-
+ const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")): null;
+  
   const handlePasswordReset = (e) => {
     e.preventDefault();
     // Add logic to handle password reset

@@ -20,15 +20,16 @@ const AddMoneyForm = () => {
     setLoading(true); // Start loading
 
     const token = Cookies.get('accessToken'); // Get the token from cookies
-    console.log(token)
+    const user = JSON.parse(Cookies.get('user')); // Get the token from cookies
+    console.log(user)
 
     const data = {
       donor: donor, 
       amount: addAmount,
       account: account,
       trx: trx,
-      timeReceived: time,
-      addedBy: "user", // Replace with dynamic user ID if needed
+      timeReceived: new Date(time).toISOString(),
+      addedBy: user._id, // Replace with dynamic user ID if needed
     };
 
     try {
@@ -37,7 +38,7 @@ const AddMoneyForm = () => {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
           "Authorization": `Bearer ${token}`
-        },
+        },withCredentials:true
       });
 
       console.log(response.data);

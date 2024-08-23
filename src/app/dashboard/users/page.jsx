@@ -8,8 +8,8 @@ const UserPage = () => {
     { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "user" },
     { id: 2, name: "Bob Smith", email: "bob@example.com", role: "admin" },
   ]);
-  const {data} = useFetch('/users')
-  console.log(data)
+  const {data,error,loading} = useFetch('/users')
+  console.log(data,error,loading)
 
   const handleRoleChange = (userId, newRole) => {
     setUsers(users.map(user =>

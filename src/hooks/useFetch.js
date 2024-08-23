@@ -13,11 +13,13 @@ const useFetch = (endpoint) => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(base_url + endpoint, { headers: {
-                    'Content-Type': 'application/json',
-                      'x-api-key': apiKey,
-                      "Authorization":`Bearer ${token}`
-                  }, });
+                const response = await axios.get(base_url + endpoint, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
                 setData(response.data.data);
             } catch (err) {
                 setError(err);
