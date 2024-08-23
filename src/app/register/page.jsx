@@ -27,7 +27,7 @@ const RegisterPage = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
             "x-api-key": apiKey,
           },
           // Include credentials such as cookies

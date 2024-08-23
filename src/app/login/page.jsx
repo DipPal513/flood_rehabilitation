@@ -16,14 +16,15 @@ const LoginPage = () => {
     console.log("login enter...");
     try {
       const response = await axios.post(
-        base_url + "/auth/login",
+        "https://aefff-api.vercel.app/api/auth/login",
         { email:email, password:password },
-
         {
           headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey,
+            "Authorization":`Bearer ${apiKey}`
           },
+          withCredentials:true
         }
       );
       console.log("x-api-key", apiKey);
