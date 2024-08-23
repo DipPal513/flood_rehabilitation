@@ -119,11 +119,45 @@ const Header = () => {
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
         <nav className="md:hidden bg-red-600 px-4 py-3 space-y-2">
-          <Link href="/dashboard">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              admin?
-            </p>
-          </Link>
+           {token ? (
+            <>
+              {" "}
+              <div className="relative ms-2">
+                <button onClick={toggleDropdown} className="focus:outline-none">
+                  <Image
+                    src="/path-to-avatar.jpg" // Replace with your avatar image path
+                    alt="User Avatar"
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-black text-white rounded-lg shadow-lg py-2 z-50">
+                    <Link href="/profile">
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Profile
+                      </p>
+                    </Link>
+                    <Link href="/dashboard">
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Dashboard
+                      </p>
+                    </Link>
+                    <p onClick={handleLogout}>
+                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                        Logout
+                      </p>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <Link href="/login" className="ms-3 inline-block bg-gray-100 text-black px-3 py-1 rounded-full hover:bg-gray-200">
+              <p className="hover:text-red-300 cursor-pointer">Login</p>
+            </Link>
+          )}
           <Link href="/">
             <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
               Home
