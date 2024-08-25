@@ -74,7 +74,7 @@ const FundPage = () => {
               </svg>
             </button>
             <img
-              src="/flood__r.jpg"
+              src="/donation.jpg"
               alt="Donate"
               className="w-full h-auto rounded-lg"
             />
@@ -177,7 +177,7 @@ const FundPage = () => {
                         {record.account}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.transactionId}
+                        {record.trx}
                       </td>
                     </tr>
                   ))}
