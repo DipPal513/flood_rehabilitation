@@ -77,7 +77,7 @@ const FundPage = () => {
             <img
               src="/donation.jpg"
               alt="Donate"
-              className="w-full h-48 object-cover rounded-t-lg"
+              className="w-full h-full object-cover rounded-t-lg"
             />
             <div className="p-6 text-center">
               <h2 className="text-2xl font-bold text-red-600">Donate Now</h2>
