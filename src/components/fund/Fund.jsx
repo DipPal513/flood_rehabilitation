@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { format } from "date-fns";
-import useFetch from "@/hooks/useFetch"; // Import your custom useFetch hook
+import { format, parseISO } from "date-fns";
+import useFetch from "@/hooks/useFetch";
 
 const FundPage = () => {
   // Fetch added money details
@@ -18,25 +18,29 @@ const FundPage = () => {
     error: spendError,
   } = useFetch("/fund-sent");
 
-  // Calculate current money by converting string amounts to numbers and then performing arithmetic
+  // Calculate current money
   const currentMoney =
-    (addedMoneyDetails?.reduce((sum, record) => sum + Number(record.amount), 0) || 0) -
-    (spendMoneyDetails?.reduce((sum, record) => sum + Number(record.amount), 0) || 0);
+    (addedMoneyDetails?.reduce(
+      (sum, record) => sum + Number(record.amount),
+      0
+    ) || 0) -
+    (spendMoneyDetails?.reduce(
+      (sum, record) => sum + Number(record.amount),
+      0
+    ) || 0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   // Skeleton Loader Component
   const SkeletonLoader = () => (
-    <div className="animate-pulse">
-      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-      <div className="h-4 bg-gray-200 rounded mb-4"></div>
-      <div className="h-4 bg-gray-200 rounded mb-4"></div>
+    <div className="animate-pulse space-y-4">
+      <div className="h-6 bg-gray-200 rounded"></div>
+      <div className="h-6 bg-gray-200 rounded"></div>
+      <div className="h-6 bg-gray-200 rounded"></div>
     </div>
   );
 
@@ -46,23 +50,14 @@ const FundPage = () => {
   );
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <button
-          onClick={openModal}
-          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700 transition duration-300"
-        >
-          Donate!
-        </button>
-      </div>
-
+    <div className="max-w-screen-xl mx-auto sm:p-6 p-2">
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="rounded-lg relative max-w-lg mx-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-lg mx-auto relative">
             <button
               onClick={closeModal}
-              className="absolute top-6 left-6 text-white bg-black"
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-900"
             >
               <svg
                 className="w-6 h-6"
@@ -82,33 +77,40 @@ const FundPage = () => {
             <img
               src="/donation.jpg"
               alt="Donate"
-              className="w-full h-auto rounded-lg"
+              className="w-full h-48 object-cover rounded-t-lg"
             />
+            <div className="p-6 text-center">
+              <h2 className="text-2xl font-bold text-red-600">Donate Now</h2>
+              <p className="text-gray-600 mt-2">
+                Support our cause by making a donation. Every contribution helps!
+              </p>
+            </div>
           </div>
         </div>
       )}
 
-      <h1 className="text-4xl font-bold text-center text-red-600 mb-8">
-        Fund Overview
-      </h1>
+      <header className="text-center mb-8">
+        <h1 className="text-4xl font-extrabold text-red-600 mb-4">Fund Overview</h1>
+        <button
+          onClick={openModal}
+          className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-red-700 transition duration-300"
+        >
+          Donate!
+        </button>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {/* Current Money */}
-        <div className="flex justify-center items-center">
-          <div className="relative bg-red-600 text-white rounded-full w-60 h-60 flex items-center justify-center shadow-xl">
-            <span className="text-4xl ms-4 font-bold">
-              {currentMoney.toLocaleString()} BDT
-            </span>
-            <span className="absolute bottom-4 text-sm font-medium">
-              Current Fund
-            </span>
-          </div>
+        <div className="bg-red-600 text-white rounded-lg p-6 text-center shadow-lg">
+          <h2 className="text-2xl font-bold mb-2">Current Fund</h2>
+          <p className="text-4xl font-bold mb-4">{currentMoney.toLocaleString()} BDT</p>
+          <p className="text-gray-200">Total available funds after expenses</p>
         </div>
 
         {/* Spend Money */}
-        <div className="bg-white shadow-xl rounded-lg p-6 text-center border-t-4 border-red-600">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Spent Money</h2>
-          <p className="text-4xl font-bold">
+        <div className="bg-white shadow-lg rounded-lg p-6 text-center border-t-4 border-red-600">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Spent Money</h2>
+          <p className="text-4xl font-bold mb-4">
             {spendLoading
               ? "Loading..."
               : spendMoneyDetails
@@ -116,13 +118,13 @@ const FundPage = () => {
                   .toLocaleString()}{" "}
             BDT
           </p>
-          <p className="text-gray-600 mt-2">Total money spent on projects</p>
+          <p className="text-gray-600">Total spent on projects</p>
         </div>
 
         {/* Added Money */}
-        <div className="bg-white shadow-xl rounded-lg p-6 text-center border-t-4 border-red-600">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Added Money</h2>
-          <p className="text-4xl font-bold">
+        <div className="bg-white shadow-lg rounded-lg p-6 text-center border-t-4 border-red-600">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">Added Money</h2>
+          <p className="text-4xl font-bold mb-4">
             {addedLoading
               ? "Loading..."
               : addedMoneyDetails
@@ -130,126 +132,117 @@ const FundPage = () => {
                   .toLocaleString()}{" "}
             BDT
           </p>
-          <p className="text-gray-600 mt-2">Recently added funds</p>
+          <p className="text-gray-600">Recently added funds</p>
         </div>
       </div>
 
-      {/* Additional Fund Details */}
-      <div className="mt-12">
-        <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">
+      {/* Fund Details */}
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-12">
+        <h2 className="text-3xl font-bold text-red-600 mb-4 text-center">
           Fund Distribution Details
         </h2>
-        <div className="bg-white shadow-xl rounded-lg p-6">
-          <p className="text-gray-600 mb-6">
-            Here you can provide detailed information about how the funds are
-            being utilized. You can include a breakdown of the expenditure on
-            different projects, recent donations, and other relevant financial
-            details.
-          </p>
+        <p className="text-gray-600 mb-6">
+          Here you can find detailed information about how the funds are utilized. This includes breakdowns of expenditures on various projects, recent donations, and other relevant financial details.
+        </p>
 
-          {/* Search Input */}
-          <div className="flex justify-end mb-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Donor Name"
-              className="border border-gray-300 p-2 rounded-l-lg w-full md:w-1/3 focus:outline-none"
-            />
-            <button className="bg-red-600 text-white px-4 py-2 rounded-r-lg shadow-md hover:bg-red-700 transition duration-300">
-              Search
-            </button>
-          </div>
+        {/* Search Input */}
+        <div className="flex justify-center items-center mb-6">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by Donor Name"
+            className="border border-gray-300 p-3 rounded-l-lg w-full md:w-1/2"
+          />
+          <button className="bg-red-600 text-white px-4 py-3 rounded-r-lg shadow-md hover:bg-red-700 transition duration-300">
+            Search
+          </button>
+        </div>
 
-          {/* Added Money List */}
-          <h3 className="text-2xl font-bold text-red-600 mb-4">
-            Added Money List
-          </h3>
-          <div className="overflow-x-auto mb-8">
-            {addedLoading ? (
-              <SkeletonLoader />
-            ) : addedError ? (
-              <p className="text-red-500">Failed to load data.</p>
-            ) : (
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
-                <thead>
-                  <tr className="bg-red-600 text-white">
-                    <th className="px-4 py-3 text-left">Date</th>
-                    <th className="px-4 py-3 text-left">Donor</th>
-                    <th className="px-4 py-3 text-left">Amount (BDT)</th>
-                    <th className="px-4 py-3 text-left">Account</th>
-                    <th className="px-4 py-3 text-left">Transaction ID</th>
+        {/* Added Money List */}
+        <h3 className="text-2xl font-bold text-red-600 mb-4">Added Money List</h3>
+        <div className="overflow-x-auto">
+          {addedLoading ? (
+            <SkeletonLoader />
+          ) : addedError ? (
+            <p className="text-red-500">Failed to load data.</p>
+          ) : (
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+              <thead>
+                <tr className="bg-red-600 text-white">
+                  <th className="px-4 py-3 text-left">Date</th>
+                  <th className="px-4 py-3 text-left">Donor</th>
+                  <th className="px-4 py-3 text-left">Amount (BDT)</th>
+                  <th className="px-4 py-3 text-left">Account</th>
+                  <th className="px-4 py-3 text-left">Transaction ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAddedMoneyDetails.map((record, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {format(parseISO(record.timeReceived), "dd/MM/yyyy")}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.donor}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {Number(record.amount).toLocaleString()}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.account}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.trx}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredAddedMoneyDetails.map((record, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.date}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.donor}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {Number(record.amount).toLocaleString()}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.account}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.trx}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
 
-          {/* Spend Money List */}
-          <h3 className="text-2xl font-bold text-red-600 mb-4">
-            Spent Money List
-          </h3>
-          <div className="overflow-x-auto">
-            {spendLoading ? (
-              <SkeletonLoader />
-            ) : spendError ? (
-              <p className="text-red-500">Failed to load data.</p>
-            ) : (
-              <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
-                <thead>
-                  <tr className="bg-red-600 text-white">
-                    <th className="px-4 py-3 text-left">Date</th>
-                    <th className="px-4 py-3 text-left">Reason</th>
-                    <th className="px-4 py-3 text-left">Amount (BDT)</th>
-                    <th className="px-4 py-3 text-left">Account</th>
-                    <th className="px-4 py-3 text-left">Transaction ID</th>
+        {/* Spend Money List */}
+        <h3 className="mt-10 text-2xl font-bold text-red-600 mb-4">Spent Money List</h3>
+        <div className="overflow-x-auto">
+          {spendLoading ? (
+            <SkeletonLoader />
+          ) : spendError ? (
+            <p className="text-red-500">Failed to load data.</p>
+          ) : (
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+              <thead>
+                <tr className="bg-red-600 text-white">
+                  <th className="px-4 py-3 text-left">Date</th>
+                  <th className="px-4 py-3 text-left">Spent For</th>
+                  <th className="px-4 py-3 text-left">Amount (BDT)</th>
+                  <th className="px-4 py-3 text-left">Account</th>
+                  <th className="px-4 py-3 text-left">Transaction ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {spendMoneyDetails.map((record, index) => (
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td className="border-t px-4 py-3 text-gray-700">
+                    {format(parseISO(record.timeSent), "dd/MM/yyyy")}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.project}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {Number(record.amount).toLocaleString()}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.account}
+                    </td>
+                    <td className="border-t px-4 py-3 text-gray-700">
+                      {record.trx}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {spendMoneyDetails.map((record, index) => (
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {format(new Date(record.date), "dd/MM/yyyy")}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.reason}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {Number(record.amount).toLocaleString()}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.account}
-                      </td>
-                      <td className="border-t px-4 py-3 text-gray-700">
-                        {record.trx}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

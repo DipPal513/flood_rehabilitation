@@ -168,9 +168,9 @@ const Header = () => {
               About
             </p>
           </Link>
-          <Link href="/projects">
+          <Link href="/team">
             <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              Projects
+              Team
             </p>
           </Link>
           <Link href="/contact">
