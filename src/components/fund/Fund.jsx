@@ -24,6 +24,7 @@ const FundPage = () => {
     (spendMoneyDetails?.reduce((sum, record) => sum + Number(record.amount), 0) || 0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -37,6 +38,11 @@ const FundPage = () => {
       <div className="h-4 bg-gray-200 rounded mb-4"></div>
       <div className="h-4 bg-gray-200 rounded mb-4"></div>
     </div>
+  );
+
+  // Filtered data based on search query
+  const filteredAddedMoneyDetails = addedMoneyDetails?.filter((record) =>
+    record.donor.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -90,7 +96,7 @@ const FundPage = () => {
         {/* Current Money */}
         <div className="flex justify-center items-center">
           <div className="relative bg-red-600 text-white rounded-full w-60 h-60 flex items-center justify-center shadow-xl">
-            <span className="text-4xl font-bold">
+            <span className="text-4xl ms-4 font-bold">
               {currentMoney.toLocaleString()} BDT
             </span>
             <span className="absolute bottom-4 text-sm font-medium">
@@ -141,6 +147,20 @@ const FundPage = () => {
             details.
           </p>
 
+          {/* Search Input */}
+          <div className="flex justify-end mb-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by Donor Name"
+              className="border border-gray-300 p-2 rounded-l-lg w-full md:w-1/3 focus:outline-none"
+            />
+            <button className="bg-red-600 text-white px-4 py-2 rounded-r-lg shadow-md hover:bg-red-700 transition duration-300">
+              Search
+            </button>
+          </div>
+
           {/* Added Money List */}
           <h3 className="text-2xl font-bold text-red-600 mb-4">
             Added Money List
@@ -162,7 +182,7 @@ const FundPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {addedMoneyDetails.map((record, index) => (
+                  {filteredAddedMoneyDetails.map((record, index) => (
                     <tr key={index} className="hover:bg-gray-100">
                       <td className="border-t px-4 py-3 text-gray-700">
                         {record.date}
@@ -200,7 +220,7 @@ const FundPage = () => {
                 <thead>
                   <tr className="bg-red-600 text-white">
                     <th className="px-4 py-3 text-left">Date</th>
-                    <th className="px-4 py-3 text-left">Project</th>
+                    <th className="px-4 py-3 text-left">Reason</th>
                     <th className="px-4 py-3 text-left">Amount (BDT)</th>
                     <th className="px-4 py-3 text-left">Account</th>
                     <th className="px-4 py-3 text-left">Transaction ID</th>
@@ -210,10 +230,10 @@ const FundPage = () => {
                   {spendMoneyDetails.map((record, index) => (
                     <tr key={index} className="hover:bg-gray-100">
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.date}
+                        {format(new Date(record.date), "dd/MM/yyyy")}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.project}
+                        {record.reason}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         {Number(record.amount).toLocaleString()}
@@ -222,7 +242,7 @@ const FundPage = () => {
                         {record.account}
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
-                        {record.transactionId}
+                        {record.trx}
                       </td>
                     </tr>
                   ))}
