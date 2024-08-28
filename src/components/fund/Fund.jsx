@@ -70,7 +70,7 @@ const FundPage = () => {
 
   const filteredAddedMoneyDetails = filterData(addedMoneyDetails);
   const filteredSpendMoneyDetails = filterData(spendMoneyDetails);
-
+console.log(spendMoneyDetails)
   return (
     <div className="max-w-screen-xl mx-auto sm:p-6 p-2">
       {/* Modal */}
@@ -209,7 +209,7 @@ const FundPage = () => {
               </thead>
               <tbody>
                 {filteredAddedMoneyDetails?.map((record) => (
-                  <tr key={record.id} className="border-b border-gray-200">
+                  <tr key={record._id} className="border-b border-gray-200">
                     <td className="px-4 py-3">{format(parseISO(record.timeReceived), "dd MMM yyyy")}</td>
                     <td className="px-4 py-3">{record.donor}</td>
                     <td className="px-4 py-3">{record.amount}</td>
@@ -243,8 +243,8 @@ const FundPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredSpendMoneyDetails?.map((record) => (
-                  <tr key={record.id} className="border-b border-gray-200">
+                {spendMoneyDetails?.map((record,index) => (
+                  <tr key={record._id} className="border-b border-gray-200">
                     <td className="px-4 py-3">{format(parseISO(record.timeSent), "dd MMM yyyy")}</td>
                     <td className="px-4 py-3">{record.project}</td>
                     <td className="px-4 py-3">{record.amount}</td>
