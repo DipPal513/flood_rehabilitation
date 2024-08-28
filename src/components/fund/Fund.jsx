@@ -49,7 +49,7 @@ const FundPage = () => {
   const filterData = (data) => {
     return data
       ?.filter((record) =>
-        record.donor.toLowerCase().includes(searchQuery.toLowerCase())
+        record?.donor?.toLowerCase().includes(searchQuery.toLowerCase())
       )
       ?.filter((record) => {
         const recordDate = parseISO(record.timeReceived);
@@ -224,7 +224,7 @@ const FundPage = () => {
       </div>
 
       {/* Spent Money List */}
-      <div className="bg-white shadow-lg rounded-lg p-6">
+      <div className="bg-white shadow-lg rounded-lg sm:p-6">
         <h3 className="text-2xl font-bold text-red-600 mb-4">Spent Money List</h3>
         <div className="overflow-x-auto">
           {spendLoading ? (
