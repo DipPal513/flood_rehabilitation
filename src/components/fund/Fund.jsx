@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isToday, isThisWeek, isThisMonth, isThisYear } from "date-fns";
 import useFetch from "@/hooks/useFetch";
 
 const FundPage = () => {
@@ -31,6 +31,7 @@ const FundPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("all");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -44,10 +45,31 @@ const FundPage = () => {
     </div>
   );
 
-  // Filtered data based on search query
-  const filteredAddedMoneyDetails = addedMoneyDetails?.filter((record) =>
-    record.donor.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter and sort data based on search query and sortBy
+  const filterData = (data) => {
+    return data
+      ?.filter((record) =>
+        record.donor.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      ?.filter((record) => {
+        const recordDate = parseISO(record.timeReceived);
+        switch (sortBy) {
+          case "today":
+            return isToday(recordDate);
+          case "thisWeek":
+            return isThisWeek(recordDate);
+          case "thisMonth":
+            return isThisMonth(recordDate);
+          case "thisYear":
+            return isThisYear(recordDate);
+          default:
+            return true;
+        }
+      });
+  };
+
+  const filteredAddedMoneyDetails = filterData(addedMoneyDetails);
+  const filteredSpendMoneyDetails = filterData(spendMoneyDetails);
 
   return (
     <div className="max-w-screen-xl mx-auto sm:p-6 p-2">
@@ -145,18 +167,26 @@ const FundPage = () => {
           Here you can find detailed information about how the funds are utilized. This includes breakdowns of expenditures on various projects, recent donations, and other relevant financial details.
         </p>
 
-        {/* Search Input */}
-        <div className="flex justify-center items-center mb-6">
+        {/* Search and Sort */}
+        <div className="flex justify-center items-center mb-6 gap-4">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by Donor Name"
-            className="border border-gray-300 p-3 rounded-l-lg w-full md:w-1/2"
+            className="border border-gray-300 p-3 rounded-lg w-full md:w-1/2"
           />
-          <button className="bg-red-600 text-white px-4 py-3 rounded-r-lg shadow-md hover:bg-red-700 transition duration-300">
-            Search
-          </button>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="border border-gray-300 p-3 rounded-lg w-full md:w-1/4"
+          >
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="thisWeek">This Week</option>
+            <option value="thisMonth">This Month</option>
+            <option value="thisYear">This Year</option>
+          </select>
         </div>
 
         {/* Added Money List */}
@@ -178,32 +208,24 @@ const FundPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredAddedMoneyDetails.map((record, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {format(parseISO(record.timeReceived), "dd/MM/yyyy")}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.donor}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {Number(record.amount).toLocaleString()}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.account}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.trx}
-                    </td>
+                {filteredAddedMoneyDetails?.map((record) => (
+                  <tr key={record.id} className="border-b border-gray-200">
+                    <td className="px-4 py-3">{format(parseISO(record.timeReceived), "dd MMM yyyy")}</td>
+                    <td className="px-4 py-3">{record.donor}</td>
+                    <td className="px-4 py-3">{record.amount}</td>
+                    <td className="px-4 py-3">{record.accountNumber}</td>
+                    <td className="px-4 py-3">{record.transactionId}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </div>
+      </div>
 
-        {/* Spend Money List */}
-        <h3 className="mt-10 text-2xl font-bold text-red-600 mb-4">Spent Money List</h3>
+      {/* Spent Money List */}
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <h3 className="text-2xl font-bold text-red-600 mb-4">Spent Money List</h3>
         <div className="overflow-x-auto">
           {spendLoading ? (
             <SkeletonLoader />
@@ -214,30 +236,20 @@ const FundPage = () => {
               <thead>
                 <tr className="bg-red-600 text-white">
                   <th className="px-4 py-3 text-left">Date</th>
-                  <th className="px-4 py-3 text-left">Spent For</th>
+                  <th className="px-4 py-3 text-left">Project</th>
                   <th className="px-4 py-3 text-left">Amount (BDT)</th>
                   <th className="px-4 py-3 text-left">Account</th>
                   <th className="px-4 py-3 text-left">Transaction ID</th>
                 </tr>
               </thead>
               <tbody>
-                {spendMoneyDetails.map((record, index) => (
-                  <tr key={index} className="hover:bg-gray-100">
-                    <td className="border-t px-4 py-3 text-gray-700">
-                    {format(parseISO(record.timeSent), "dd/MM/yyyy")}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.project}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {Number(record.amount).toLocaleString()}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.account}
-                    </td>
-                    <td className="border-t px-4 py-3 text-gray-700">
-                      {record.trx}
-                    </td>
+                {filteredSpendMoneyDetails?.map((record) => (
+                  <tr key={record.id} className="border-b border-gray-200">
+                    <td className="px-4 py-3">{format(parseISO(record.timeSent), "dd MMM yyyy")}</td>
+                    <td className="px-4 py-3">{record.project}</td>
+                    <td className="px-4 py-3">{record.amount}</td>
+                    <td className="px-4 py-3">{record.accountNumber}</td>
+                    <td className="px-4 py-3">{record.transactionId}</td>
                   </tr>
                 ))}
               </tbody>
