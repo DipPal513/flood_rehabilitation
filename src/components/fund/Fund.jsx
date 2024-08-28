@@ -213,8 +213,8 @@ const FundPage = () => {
                     <td className="px-4 py-3">{format(parseISO(record.timeReceived), "dd MMM yyyy")}</td>
                     <td className="px-4 py-3">{record.donor}</td>
                     <td className="px-4 py-3">{record.amount}</td>
-                    <td className="px-4 py-3">{record.accountNumber}</td>
-                    <td className="px-4 py-3">{record.transactionId}</td>
+                    <td className="px-4 py-3">{record.account}</td>
+                    <td className="px-4 py-3">{record.trx}</td>
                   </tr>
                 ))}
               </tbody>
@@ -248,8 +248,8 @@ const FundPage = () => {
                     <td className="px-4 py-3">{format(parseISO(record.timeSent), "dd MMM yyyy")}</td>
                     <td className="px-4 py-3">{record.project}</td>
                     <td className="px-4 py-3">{record.amount}</td>
-                    <td className="px-4 py-3">{record.accountNumber}</td>
-                    <td className="px-4 py-3">{record.transactionId}</td>
+                    <td className="px-4 py-3">{record.account}</td>
+                    <td className="px-4 py-3">{record.trx}</td>
                   </tr>
                 ))}
               </tbody>
