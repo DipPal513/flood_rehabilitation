@@ -28,7 +28,7 @@ const FundManagePage = () => {
   } = useFetch("/fund-sent");
   console.log(addedMoneyDetails);
 
-  const handleDelete = async (req_type,id) => {
+  const handleDelete = async (req_type, id) => {
     setDeleteId(id);
     setType(req_type);
     setIsDeleteModalOpen(true);
@@ -38,7 +38,9 @@ const FundManagePage = () => {
     setDeleting(true);
     try {
       await axios.delete(
-        `https://aefff-api.vercel.app/api/${type == "add"?"fund-received":"fund-sent"}/${deleteId}`,
+        `https://aefff-api.vercel.app/api/${
+          type == "add" ? "fund-received" : "fund-sent"
+        }/${deleteId}`,
         {
           headers: {
             "x-api-key": apiKey, // Replace with your actual x-api-key
@@ -54,7 +56,6 @@ const FundManagePage = () => {
       setDeleting(false);
       setIsDeleteModalOpen(false);
       setDeleteId(null);
-      
     }
   };
 
@@ -121,7 +122,7 @@ const FundManagePage = () => {
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         <button
-                          onClick={() => handleDelete("add",record._id)}
+                          onClick={() => handleDelete("add", record._id)}
                           className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition duration-300"
                         >
                           Delete
@@ -175,7 +176,7 @@ const FundManagePage = () => {
                       </td>
                       <td className="border-t px-4 py-3 text-gray-700">
                         <button
-                          onClick={() => handleDelete("spend",record._id)}
+                          onClick={() => handleDelete("spend", record._id)}
                           className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition duration-300"
                         >
                           Delete
