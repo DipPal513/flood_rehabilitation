@@ -8,25 +8,29 @@ import { useRouter } from "next/navigation";
 
 const Header = () => {
   const token = Cookies.get("accessToken");
+  const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    setIsDropdownOpen(false); // Close dropdown when toggling the menu
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const handleLogout = () => {
-    Cookies.remove("accessToken"); // Clear the access token cookie
-    Cookies.remove("user"); // Clear the access token cookie
-    toast.success("Logged out successfully!"); // Show success toast
-    setIsDropdownOpen(false); // Close the dropdown menu after logout
-    router.push("/login")
-  };
 
+  const handleLogout = () => {
+    Cookies.remove("accessToken");
+    Cookies.remove("user");
+    toast.success("Logged out successfully!");
+    setIsDropdownOpen(false);
+    setIsMenuOpen(false);
+    router.push("/login");
+  };
 
   return (
     <header className="bg-red-600 text-white sticky top-0 z-50 shadow-lg">
@@ -38,51 +42,50 @@ const Header = () => {
 
         {/* Navigation for larger screens */}
         <nav className="hidden md:flex space-x-6 items-center">
-          {/* User Avatar */}
           {token ? (
-            <>
-              {" "}
-              <div className="relative">
-                <button onClick={toggleDropdown} className="focus:outline-none">
-                  <Image
-                    src="/path-to-avatar.jpg" // Replace with your avatar image path
-                    alt="User Avatar"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-                    <Link href="/profile">
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                        Profile
-                      </p>
-                    </Link>
+            <div className="relative">
+              <button onClick={toggleDropdown} className="focus:outline-none">
+                <Image
+                  src="/path-to-avatar.jpg" // Replace with your avatar image path
+                  alt="User Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                  <Link href="/profile">
+                    <div className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                      Profile
+                    </div>
+                  </Link>
+                  {user?.role === "ADMIN" && (
                     <Link href="/dashboard">
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                      <div className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
                         Dashboard
-                      </p>
+                      </div>
                     </Link>
-                    <p onClick={handleLogout}>
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                        Logout
-                      </p>
-                    </p>
+                  )}
+                  <div
+                    onClick={handleLogout}
+                    className="block px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
+                    Logout
                   </div>
-                )}
-              </div>
-            </>
+                </div>
+              )}
+            </div>
           ) : (
             <Link href="/login">
-              <p className="hover:text-red-300 cursor-pointer">Login</p>
+              <div className="hover:text-red-300 cursor-pointer">Login</div>
             </Link>
           )}
           <Link href="/">
             <p className="hover:text-red-300 cursor-pointer">Home</p>
           </Link>
-          <Link href="/about">
-            <p className="hover:text-red-300 cursor-pointer">About</p>
+          <Link href="/team">
+            <p className="hover:text-red-300 cursor-pointer">Team</p>
           </Link>
           <Link href="/projects">
             <p className="hover:text-red-300 cursor-pointer">Projects</p>
@@ -94,10 +97,7 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button
-            className="text-white focus:outline-none"
-            onClick={toggleMenu}
-          >
+          <button className="text-white focus:outline-none" onClick={toggleMenu}>
             <svg
               className="w-6 h-6"
               fill="none"
@@ -119,64 +119,66 @@ const Header = () => {
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
         <nav className="md:hidden bg-red-600 px-4 py-3 space-y-2">
-           {token ? (
-            <>
-              {" "}
-              <div className="relative ms-2">
-                <button onClick={toggleDropdown} className="focus:outline-none">
-                  <Image
-                    src="/path-to-avatar.jpg" // Replace with your avatar image path
-                    alt="User Avatar"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-black text-white rounded-lg shadow-lg py-2 z-50">
-                    <Link href="/profile">
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                        Profile
-                      </p>
-                    </Link>
+          {token ? (
+            <div className="relative">
+              <button onClick={toggleDropdown} className="focus:outline-none">
+                <Image
+                  src="/path-to-avatar.jpg" // Replace with your avatar image path
+                  alt="User Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </button>
+              {isDropdownOpen && (
+                <div className="mt-2 w-full bg-black text-white rounded-lg shadow-lg py-2 z-50">
+                  <Link href="/profile">
+                    <div className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                      Profile
+                    </div>
+                  </Link>
+                  {user?.role === "ADMIN" && (
                     <Link href="/dashboard">
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                      <div className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
                         Dashboard
-                      </p>
+                      </div>
                     </Link>
-                    <p onClick={handleLogout}>
-                      <p className="block px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                        Logout
-                      </p>
-                    </p>
+                  )}
+                  <div
+                    onClick={handleLogout}
+                    className="block px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  >
+                    Logout
                   </div>
-                )}
-              </div>
-            </>
+                </div>
+              )}
+            </div>
           ) : (
-            <Link href="/login" className="ms-3 inline-block bg-gray-100 text-black px-3 py-1 rounded-full hover:bg-gray-200">
-              <p className="hover:text-red-300 cursor-pointer">Login</p>
+            <Link href="/login">
+              <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+                Login
+              </div>
             </Link>
           )}
           <Link href="/">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+            <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
               Home
-            </p>
+            </div>
           </Link>
           <Link href="/about">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+            <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
               About
-            </p>
+            </div>
           </Link>
-          <Link href="/team">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              Team
-            </p>
+          <Link href="/projects">
+            <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+              Projects
+            </div>
           </Link>
           <Link href="/contact">
-            <p className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
+            <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
               Contact
-            </p>
+            </div>
           </Link>
         </nav>
       )}

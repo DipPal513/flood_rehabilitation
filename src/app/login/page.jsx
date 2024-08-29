@@ -39,10 +39,20 @@ const LoginPage = () => {
 
         toast.dismiss(); // Dismiss the loading toast
         toast.success("Login successful!");
+        if(user.role == "ADMIN"){
 
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 100);
+          setTimeout(() => {
+            
+            router.push("/dashboard");
+          }, 100);
+        }
+        else{
+          setTimeout(() => {
+            
+            router.push("/profile");
+          }, 100);
+        }
+
       } else {
         toast.dismiss(); // Dismiss the loading toast
         toast.error(response.data.message || "Login failed. Please try again.");
