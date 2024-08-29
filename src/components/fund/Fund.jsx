@@ -206,7 +206,7 @@ console.log(spendMoneyDetails)
                   <th className="px-4 py-3 text-left">Account</th>
                   <th className="px-4 py-3 text-left">Transaction ID</th>
                 </tr>
-              </thead>
+              </thead> 
               <tbody>
                 {filteredAddedMoneyDetails?.map((record) => (
                   <tr key={record._id} className="border-b border-gray-200">
