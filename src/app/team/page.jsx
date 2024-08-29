@@ -39,7 +39,7 @@ const teamMembers = [
     phone: '+880 1978-120911',
     // facebook:"https://www.facebook.com/dippal513"
   },
-  {
+  { 
     name: 'Rahat Rahman',
     role: 'External Affairs and support',
     phone: '+8801675137167',
