@@ -87,11 +87,11 @@ const Header = () => {
           <Link href="/team">
             <p className="hover:text-red-300 cursor-pointer">Team</p>
           </Link>
-          <Link href="/projects">
-            <p className="hover:text-red-300 cursor-pointer">Projects</p>
+          <Link href="/insight">
+            <p className="hover:text-red-300 cursor-pointer">Insight</p>
           </Link>
           <Link href="/contact">
-            <p className="hover:text-red-300 cursor-pointer">Contact</p>
+            <p className="hover:text-red-300 cursor-pointer">About us</p>
           </Link>
         </nav>
 

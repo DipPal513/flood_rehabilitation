@@ -5,17 +5,17 @@ import FundModal from "./FundModal";
 import FundCard from "./FundCard";
 import FundTable from "./FundTable";
 import SearchSort from "./FundSort";
-import { parseISO } from "date-fns";
+import { parseISO, isToday, isThisWeek, isThisMonth, isThisYear } from "date-fns"; // Importing necessary functions
 
 const FundPage = () => {
   const {
-    data: addedMoneyDetails,
+    data: addedMoneyDetails = [], // Defaulting to an empty array
     loading: addedLoading,
     error: addedError,
   } = useFetch("/fund-received");
 
   const {
-    data: spendMoneyDetails,
+    data: spendMoneyDetails = [], // Defaulting to an empty array
     loading: spendLoading,
     error: spendError,
   } = useFetch("/fund-sent");
@@ -62,7 +62,8 @@ const FundPage = () => {
 
   const filteredAddedMoneyDetails = filterData(addedMoneyDetails);
   const filteredSpendMoneyDetails = filterData(spendMoneyDetails);
-  console.log("spentmoney details: show: ",filteredSpendMoneyDetails);
+
+  console.log("Spent Money Details: ", addedMoneyDetails);
 
   return (
     <div className="max-w-screen-xl mx-auto sm:p-6 p-2">

@@ -6,6 +6,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import Cookies from "js-cookie";
 import apiKey from "@/utils/api_key";
 import toast from "react-hot-toast";
+import ConfirmModal from "@/components/ConfirmationModal"; // Import the ConfirmModal component
 
 // Skeleton Loader Component
 const SkeletonLoader = () => (
@@ -17,9 +18,11 @@ const SkeletonLoader = () => (
 );
 
 const UserPage = () => {
-  const { data, error, loading,fetchData } = useFetch("/users");
+  const { data, error, loading, fetchData } = useFetch("/users");
   const [users, setUsers] = useState([]);
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const currUser = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
   useEffect(() => {
     if (data) {
       setUsers(data);
@@ -27,9 +30,8 @@ const UserPage = () => {
   }, [data]);
 
   const handleRoleChange = async (userId, newRole) => {
-    const user = Cookies.get("user") ?JSON.parse(Cookies.get("user")) : null; 
-    const token = Cookies.get("accessToken")// Get the token from cookies
-    // Replace with your actual API key
+     
+    const token = Cookies.get("accessToken");
 
     try {
       const response = await axios.patch(
@@ -39,26 +41,59 @@ const UserPage = () => {
           headers: {
             "Content-Type": "application/json",
             "x-api-key": apiKey,
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         fetchData();
-        
         toast("Role updated successfully...");
         console.log("Role updated successfully:", response.data);
       }
     } catch (error) {
       console.error("Failed to update role:", error);
-      toast.error("Failed to update role")
-      // Handle error (e.g., show an error message)
+      toast.error("Failed to update role");
     }
   };
 
-  const handleDeleteUser = (userId) => {
-    setUsers(users.filter((user) => user._id !== userId));
+  const openDeleteModal = (userId) => {
+    setUserToDelete(userId);
+    setModalOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    const token = Cookies.get("accessToken");
+
+    try {
+      const response = await axios.delete(
+        `https://aefff-api.vercel.app/api/users/${userToDelete}`,
+        {
+          headers: {
+            "x-api-key": apiKey,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Close modal and remove user from list
+        setModalOpen(false);
+        setUsers(users.filter((user) => user._id !== userToDelete));
+        toast("User deleted successfully...");
+        fetchData(); // Reload users
+      }
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      toast.error("Failed to delete user");
+    }
+  };
+
+  const closeDeleteModal = () => {
+    setModalOpen(false);
+    setUserToDelete(null);
   };
 
   return (
@@ -67,7 +102,6 @@ const UserPage = () => {
 
       <div className="overflow-x-auto">
         {loading ? (
-          // Display Skeleton Loader while data is loading
           <div>
             <SkeletonLoader />
             <SkeletonLoader />
@@ -101,14 +135,15 @@ const UserPage = () => {
                       <option value="ADMIN">Admin</option>
                     </select>
                   </td>
-                      <td className="py-2 px-4">{user.role}</td>
+                  <td className="py-2 px-4">{user.role}</td>
                   <td className="py-2 px-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                  {currUser.role == "ADMIN" &&
                     <button
-                      onClick={() => handleDeleteUser(user._id)}
+                      onClick={() => openDeleteModal(user._id)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <FiTrash2 className="w-5 h-5" />
-                    </button>
+                    </button>}
                     <button
                       className="text-blue-600 hover:text-blue-800"
                       disabled
@@ -125,6 +160,12 @@ const UserPage = () => {
           <div className="text-red-500 mt-4">Failed to load users.</div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={modalOpen}
+        onConfirm={handleDeleteUser}
+        onCancel={closeDeleteModal}
+      />
     </div>
   );
 };
