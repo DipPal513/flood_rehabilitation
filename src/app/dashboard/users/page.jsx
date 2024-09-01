@@ -63,6 +63,7 @@ const UserPage = () => {
   };
 
   const handleDeleteUser = async () => {
+    console.log(userToDelete)
     if (!userToDelete) return;
 
     const token = Cookies.get("accessToken");

@@ -165,14 +165,14 @@ const Header = () => {
               Home
             </div>
           </Link>
-          <Link href="/about">
+          <Link href="/team">
             <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              About
+              Our Team
             </div>
           </Link>
-          <Link href="/projects">
+          <Link href="/insight">
             <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              Projects
+              Insight
             </div>
           </Link>
           <Link href="/contact">

@@ -1,194 +1,191 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import useFetch from "@/hooks/useFetch";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
   Title,
   Tooltip,
   Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  ArcElement,
-  PointElement,
 } from "chart.js";
+import { FiDollarSign } from "react-icons/fi";
+import { FaMoneyBillWave, FaMobileAlt, FaUniversity, FaCalendarDay, FaCalendarWeek, FaCalendarAlt } from "react-icons/fa";
 
-// Register the necessary Chart.js components
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  LineElement,
-  ArcElement,
-  PointElement
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const ChartPage = () => {
-  const {
-    data: addedMoneyDetails = [],
-    loading: addedLoading,
-    error: addedError,
-  } = useFetch("/fund-received");
-
-  const {
-    data: spendMoneyDetails = [],
-    loading: spendLoading,
-    error: spendError,
-  } = useFetch("/fund-sent");
-
-  const [chartData, setChartData] = useState({
-    daily: { labels: [], datasets: [] },
-    weekly: { labels: [], datasets: [] },
-    monthly: { labels: [], datasets: [] },
+  const { data: addedMoneyDetails = [], loading: addedLoading } = useFetch("/fund-received");
+  const [categorizedData, setCategorizedData] = useState({
+    cash: 0,
+    bkash: 0,
+    dbbl: 0,
+    nagad: 0,
+    total: 0,
+  });
+  const [timeBasedCollections, setTimeBasedCollections] = useState({
+    today: 0,
+    week: 0,
+    month: 0,
   });
 
   useEffect(() => {
-    if (!addedLoading && !spendLoading) {
-      console.log("Added Money Details:", addedMoneyDetails);
-      console.log("Spent Money Details:", spendMoneyDetails);
+    if (!addedLoading && Array.isArray(addedMoneyDetails)) {
+      const today = new Date();
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday as the start of the week
+      startOfWeek.setHours(0, 0, 0, 0); // Set start of the day
 
-      const processData = () => {
-        const dailyData = getStatistics(addedMoneyDetails, spendMoneyDetails, 'day');
-        const weeklyData = getStatistics(addedMoneyDetails, spendMoneyDetails, 'week');
-        const monthlyData = getStatistics(addedMoneyDetails, spendMoneyDetails, 'month');
-        
-        setChartData({
-          daily: dailyData,
-          weekly: weeklyData,
-          monthly: monthlyData,
-        });
-      };
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      startOfMonth.setHours(0, 0, 0, 0); // Set start of the day
 
-      processData();
+      const categories = { cash: 0, bkash: 0, dbbl: 0, nagad: 0 };
+      const timeCollections = { today: 0, week: 0, month: 0 };
+
+      addedMoneyDetails.forEach((record) => {
+        const account = record?.account?.toLowerCase();
+        const amount = parseFloat(record?.amount);
+        const date = new Date(record?.timeReceived);
+
+        if (account && categories.hasOwnProperty(account) && !isNaN(amount)) {
+          categories[account] += amount;
+
+          const recordDate = new Date(date);
+          recordDate.setHours(0, 0, 0, 0); // Normalize date to start of the day
+
+          if (recordDate.toDateString() === today.toDateString()) {
+            timeCollections.today += amount;
+          }
+          if (recordDate >= startOfWeek && recordDate <= today) {
+            timeCollections.week += amount;
+          }
+          if (recordDate >= startOfMonth && recordDate <= today) {
+            timeCollections.month += amount;
+          }
+        }
+      });
+
+      const total = Object.values(categories).reduce((acc, curr) => acc + curr, 0);
+      setCategorizedData({ ...categories, total });
+      setTimeBasedCollections(timeCollections);
     }
-  }, [addedLoading, spendLoading, addedMoneyDetails, spendMoneyDetails]);
+  }, [addedLoading, addedMoneyDetails]);
 
-  const getStatistics = (addedData, spentData, period) => {
-    // Initialize labels and data arrays
-    const labels = [];
-    const addedMoneyData = [];
-    const spentMoneyData = [];
+  const formatCurrency = (amount) => {
+    return amount?.toLocaleString("en-US", { style: "currency", currency: "BDT" });
+  };
 
-    // Helper function to group and calculate data based on period
-    const processData = (data) => {
-      return data.reduce((acc, record) => {
-        const date = new Date(record.date); // Adjust based on your data structure
-        const key = period === 'day' ? `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}` :
-          period === 'week' ? `${date.getFullYear()}-W${getWeekNumber(date)}` :
-          `${date.getFullYear()}-${date.getMonth() + 1}`; // Monthly grouping
-          
-        if (!acc[key]) acc[key] = 0;
-        acc[key] += record.amount;
-        return acc;
-      }, {});
-    };
+  const chartData = {
+    labels: ["Cash", "bKash", "DBBL", "Nagad"],
+    datasets: [
+      {
+        label: "Fund Collections",
+        data: [categorizedData.cash, categorizedData.bkash, categorizedData.dbbl, categorizedData.nagad],
+        backgroundColor: ["#36a2eb", "#ff6384", "#ffcd56", "#4bc0c0"],
+        hoverBackgroundColor: ["#36a2eb", "#ff6384", "#ffcd56", "#4bc0c0"],
+        borderRadius: 5,
+      },
+    ],
+  };
 
-    // Function to get the week number
-    const getWeekNumber = (date) => {
-      const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-      const days = Math.floor((date - firstDayOfYear) / (24 * 60 * 60 * 1000));
-      return Math.ceil((days + firstDayOfYear.getDay() + 1) / 7);
-    };
-
-    // Process added and spent data
-    const addedDataProcessed = processData(addedData);
-    const spentDataProcessed = processData(spentData);
-
-    // Populate labels and datasets
-    for (const [key, value] of Object.entries(addedDataProcessed)) {
-      labels.push(key);
-      addedMoneyData.push(value);
-      spentMoneyData.push(spentDataProcessed[key] || 0);
-    }
-
-    return {
-      labels,
-      datasets: [
-        {
-          label: 'Added Money',
-          data: addedMoneyData,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "Fund Collection by Payment Method",
+        font: {
+          size: 18,
         },
-        {
-          label: 'Spent Money',
-          data: spentMoneyData,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => formatCurrency(value),
         },
-      ],
-    };
+      },
+    },
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto sm:p-6 p-2">
-      <header className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-red-600 mb-4">Fund Statistics</h1>
+    <div className="bg-gray-100 text-gray-800 p-4 mx-auto max-w-screen-xl">
+      <header className="text-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Fund Statistics</h1>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-        <div className="bg-white shadow-md rounded-lg p-4">
-          <h2 className="text-2xl font-semibold mb-4">Daily Statistics</h2>
-          <Line
-            data={chartData.daily}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Daily Added vs Spent Money',
-                },
-              },
-            }}
-          />
+      <div className="flex flex-wrap justify-between gap-4">
+        <div className="bg-white p-4 rounded-lg shadow-md flex-1">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Total Collections</h2>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 bg-blue-100 p-4 rounded-lg shadow-md mb-4 flex items-center">
+              <FaMoneyBillWave className="text-blue-500 text-2xl mr-2" />
+              <div>
+                <h3 className="text-xl font-bold">Cash</h3>
+                <p className="text-lg text-gray-700">{formatCurrency(categorizedData.cash)}</p>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-pink-100 p-4 rounded-lg shadow-md mb-4 flex items-center">
+              <FaMobileAlt className="text-pink-500 text-2xl mr-2" />
+              <div>
+                <h3 className="text-xl font-bold">bKash</h3>
+                <p className="text-lg text-gray-700">{formatCurrency(categorizedData.bkash)}</p>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-yellow-100 p-4 rounded-lg shadow-md mb-4 flex items-center">
+              <FaUniversity className="text-yellow-500 text-2xl mr-2" />
+              <div>
+                <h3 className="text-xl font-bold">DBBL</h3>
+                <p className="text-lg text-gray-700">{formatCurrency(categorizedData.dbbl)}</p>
+              </div>
+            </div>
+
+            <div className="flex-1 bg-teal-100 p-4 rounded-lg shadow-md mb-4 flex items-center">
+              <FaUniversity className="text-teal-500 text-2xl mr-2" />
+              <div>
+                <h3 className="text-xl font-bold">Nagad</h3>
+                <p className="text-lg text-gray-700">{formatCurrency(categorizedData.nagad)}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="bg-white shadow-md rounded-lg p-4">
-          <h2 className="text-2xl font-semibold mb-4">Weekly Statistics</h2>
-          <Bar
-            data={chartData.weekly}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Weekly Added vs Spent Money',
-                },
-              },
-            }}
-          />
-        </div>
-        <div className="bg-white shadow-md rounded-lg p-4">
-          <h2 className="text-2xl font-semibold mb-4">Monthly Statistics</h2>
-          <Pie
-            data={chartData.monthly}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: 'top',
-                },
-                title: {
-                  display: true,
-                  text: 'Monthly Added vs Spent Money',
-                },
-              },
-            }}
-          />
+
+        <div className="bg-white p-4 rounded-lg shadow-md flex-1">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Funds Collection Chart</h2>
+          <div className="w-full h-64">
+            <Bar data={chartData} options={chartOptions} />
+          </div>
         </div>
       </div>
+
+      {/* <div className="mt-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Time-Based Collections</h2>
+        <div className="flex flex-wrap gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-md flex-1">
+            <h3 className="text-xl font-bold mb-2">Today</h3>
+            <p className="text-lg text-gray-700">{formatCurrency(timeBasedCollections.today)}</p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md flex-1">
+            <h3 className="text-xl font-bold mb-2">This Week</h3>
+            <p className="text-lg text-gray-700">{formatCurrency(timeBasedCollections.week)}</p>
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-md flex-1">
+            <h3 className="text-xl font-bold mb-2">This Month</h3>
+            <p className="text-lg text-gray-700">{formatCurrency(timeBasedCollections.month)}</p>
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 };

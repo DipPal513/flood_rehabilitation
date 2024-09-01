@@ -5,7 +5,13 @@ import FundModal from "./FundModal";
 import FundCard from "./FundCard";
 import FundTable from "./FundTable";
 import SearchSort from "./FundSort";
-import { parseISO, isToday, isThisWeek, isThisMonth, isThisYear } from "date-fns"; // Importing necessary functions
+import {
+  parseISO,
+  isToday,
+  isThisWeek,
+  isThisMonth,
+  isThisYear,
+} from "date-fns"; // Importing necessary functions
 
 const FundPage = () => {
   const {
@@ -70,7 +76,9 @@ const FundPage = () => {
       <FundModal isModalOpen={isModalOpen} closeModal={closeModal} />
 
       <header className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-red-600 mb-4">Fund Overview</h1>
+        <h1 className="text-4xl font-extrabold text-red-600 mb-4">
+          Fund Overview
+        </h1>
         <button
           onClick={openModal}
           className="bg-red-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-red-700 transition duration-300"
@@ -81,11 +89,16 @@ const FundPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
         <FundCard
-          title="Current Money"
-          amount={currentMoney}
-          description="Available funds"
-          isLoading={addedLoading || spendLoading}
-          className="border-t-red-600"
+          title="Added Money"
+          amount={addedMoneyDetails?.reduce(
+            (sum, record) => sum + Number(record.amount),
+            0
+          )}
+          description="Total added money"
+          isLoading={addedLoading}
+          bg={"bg-green-500"}
+          titleClass="white"
+          className=" text-white"
         />
         <FundCard
           title="Spent Money"
@@ -95,17 +108,14 @@ const FundPage = () => {
           )}
           description="Total spent money"
           isLoading={spendLoading}
-          className="border-t-green-600"
+          className="border-t-red-600"
         />
         <FundCard
-          title="Added Money"
-          amount={addedMoneyDetails?.reduce(
-            (sum, record) => sum + Number(record.amount),
-            0
-          )}
-          description="Total added money"
-          isLoading={addedLoading}
-          className="border-t-blue-600"
+          title="Current Money"
+          amount={currentMoney}
+          description="Available funds"
+          isLoading={addedLoading || spendLoading}
+          className="border-t-green-600"
         />
       </div>
 
