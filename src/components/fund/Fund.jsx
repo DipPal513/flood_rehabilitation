@@ -96,7 +96,7 @@ const FundPage = () => {
           )}
           description="Total added money"
           isLoading={addedLoading}
-          bg={"bg-green-500"}
+          bg={"bg-red-500"}
           titleClass="white"
           className=" text-white"
         />
