@@ -90,8 +90,8 @@ const Header = () => {
           <Link href="/insight">
             <p className="hover:text-red-300 cursor-pointer">Insight</p>
           </Link>
-          <Link href="/contact">
-            <p className="hover:text-red-300 cursor-pointer">About us</p>
+          <Link href="/events">
+            <p className="hover:text-red-300 cursor-pointer">Events</p>
           </Link>
         </nav>
 
@@ -175,9 +175,9 @@ const Header = () => {
               Insight
             </div>
           </Link>
-          <Link href="/contact">
+          <Link href="/events">
             <div className="block text-white hover:bg-red-700 px-3 py-2 rounded-md">
-              Contact
+              events
             </div>
           </Link>
         </nav>
