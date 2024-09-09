@@ -5,6 +5,7 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { FaFacebook, FaFacebookF } from "react-icons/fa";
 
 const Header = () => {
   const token = Cookies.get("accessToken");
@@ -39,7 +40,8 @@ const Header = () => {
         <div className="text-2xl font-bold">
           <Link href="/">August Flood Rehabilitation</Link>
         </div>
-
+        <Link href={"https://www.facebook.com/AugustFloodRehabilitation?mibextid=ZbWKwL"} target="_blank" className="me-3 md:hidden block">
+        <FaFacebookF className="text-2xl"/></Link>
         {/* Navigation for larger screens */}
         <nav className="hidden md:flex space-x-6 items-center">
           {token ? (
@@ -94,7 +96,7 @@ const Header = () => {
             <p className="hover:text-red-300 cursor-pointer">Events</p>
           </Link>
         </nav>
-
+         
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button className="text-white focus:outline-none" onClick={toggleMenu}>

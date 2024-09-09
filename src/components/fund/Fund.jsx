@@ -12,6 +12,7 @@ import {
   isThisMonth,
   isThisYear,
 } from "date-fns"; // Importing necessary functions
+import EventSlider from "../eventSlider/EventSlider";
 
 const FundPage = () => {
   const {
@@ -118,7 +119,7 @@ const FundPage = () => {
           className="border-t-green-600"
         />
       </div>
-
+<EventSlider />
       <SearchSort
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

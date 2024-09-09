@@ -1,32 +1,55 @@
-import Link from 'next/link';
-import { FaFacebookF } from 'react-icons/fa';
+import Link from "next/link";
+import { FaFacebookF } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-red-600 text-white py-8">
-      <div className="max-w-screen-xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Contact Info */}
-          <div className="mb-4 md:mb-0">
-            <h2 className="text-xl font-bold">Contact Us</h2>
-            <p className="mt-2">Phone: <a href="tel:01625197575" className="hover:text-red-300">01625197575</a></p>
-            <p className="mt-1">Email: <Link href="mailto:dip.pal.513@gmail.com" className="hover:text-red-300">dip.pal.513@gmail.com</Link></p>
-          </div>
-
-          {/* Social Media Links */}
-          <div className="flex space-x-6">
-            <Link href="https://www.facebook.com/YourPage" passHref>
-              <p  className="hover:text-red-300">
-                <FaFacebookF size={24} />
-              </p>
+    <footer className="bg-red-500 text-white py-4">
+      <div className="max-w-screen-xl mx-auto px-4 text-center">
+        {/* Email */}
+        <div className="mb-4">
+          <p>
+            Email:{" "}
+            <Link
+              href="mailto:augustprojectrehabiliation@gmail.com"
+              className="hover:text-gray-400"
+            >
+              augustprojectrehabiliation@gmail.com
             </Link>
-            {/* Add other social media links here if needed */}
-          </div>
+          </p>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-8 text-center">
-          <p>&copy; {new Date().getFullYear()} August Flood Rehabilitation. All rights reserved.</p>
+        {/* Social Media Links */}
+        <div className="flex justify-center space-x-4 mb-4">
+          <Link href="https://www.facebook.com/YourPage" passHref>
+            <p className="hover:text-gray-400">
+              <FaFacebookF size={24} />
+            </p>
+          </Link>
+        </div>
+
+        {/* Copyright and Developer Info */}
+        <div className="text-sm text-white">
+          <p>
+            &copy; {new Date().getFullYear()} All rights reserved by{" "}
+            <Link
+              href="https://www.facebook.com/AugustFloodRehabilitation?mibextid=ZbWKwL"
+              target="_blank"
+              className="hover:text-gray-400"
+            >
+              Project: August Flood Rehabilitation
+            </Link>
+            .
+          </p>
+          <p>
+            Developed by{" "}
+            <a
+              href="https://www.dippal.vercel.app"
+              target="_blank"
+              className="text-blue-500 underline hover:text-blue-400"
+            >
+              Dip Pal
+            </a>
+          </p>
         </div>
       </div>
     </footer>
