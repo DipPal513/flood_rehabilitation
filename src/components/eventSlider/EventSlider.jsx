@@ -32,10 +32,10 @@ const EventSection = ({ event }) => {
 
 
 const event = {
-  title: 'Rythm for Rehabilitation',
+  title: 'Rhythm for Rehabilitation 1.0',
   
   image: '/banner.jpg', // Replace with your image path
-  link: 'https://www.facebook.com/AugustFloodRehabilitation?mibextid=ZbWKwL', // Link to the event page
+  link: 'https://www.facebook.com/share/m6m1JHCzhD9zkUxp/', // Link to the event page
 };
 
 const EventSlider = () => {
