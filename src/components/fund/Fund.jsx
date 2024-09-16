@@ -119,7 +119,7 @@ const FundPage = () => {
           className="border-t-green-600"
         />
       </div>
-<EventSlider />
+      {/* <EventSlider /> */}
       <SearchSort
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

@@ -20,6 +20,7 @@ const Card = ({ event }) => {
           className="block font-sans text-base font-light leading-relaxed text-inherit antialiased"
           // You can adjust maxLength as needed
         >On a Thursday night, Project : August flood Rehabilitation is organizing a fundraising concert...</p>
+        <p className="font-bold text-red-600 mt-2 mb-1">#closed!</p>
       </div>
       <div className="p-6 pt-0">
         <button
