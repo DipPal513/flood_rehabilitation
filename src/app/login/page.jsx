@@ -4,7 +4,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-
+import Link from "next/link";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -142,7 +142,7 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
-        
+        <p className="text-center text-gray-500">Register <Link href="/register" className="text-red-600">here</Link></p>
       </div>
       <Toaster />
     </div>
