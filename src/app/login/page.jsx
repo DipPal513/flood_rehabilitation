@@ -142,7 +142,7 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
-        <p className="text-center text-gray-500">Register <Link href="/register" className="text-red-600">here</Link></p>
+        
       </div>
       <Toaster />
     </div>

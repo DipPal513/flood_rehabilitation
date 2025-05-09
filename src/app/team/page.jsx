@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -42,6 +41,15 @@ const teamMembers = [
     img:"/dip.jpg"
 
   },
+  {
+    name: 'Lobiyot Talukder',
+    role: 'Area Survey & Logistics support',
+    phone: '01862143289',
+    facebook:"https://www.facebook.com/share/15Pu4QufDC/?mibextid=wwXIfr",
+    img:"/new-mem.jpg"
+
+  },
+  
   {
     name: 'Sadman Atik',
     role: 'Backend Developer',
